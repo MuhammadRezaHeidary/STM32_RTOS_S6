@@ -95,13 +95,20 @@ void HPT_UART_Send() {
 }
 
 ________________________________________
-################## How to create binary semaphore?
+################## How to create binary semaphore? cmsis.h
 1. osSemaphoreId BinSemHandle;
 2. osSemaphoreDef(BinSem);
 3. BinSemHandle = osSemaphoreCreate(osSemaphore(BinSem), 1);
 4. other operations
 	osSemaphoreWait(BinSemHandle, osWaitForever);
 	osSemaphoreRelease(BinSemHandle);
+________________________________________
+################## How to create binary semaphore? freertos.h
+1. SemaphoreHandle_t SimpleBinarySemaphoreHandler;
+2. SimpleBinarySemaphoreHandler = xSemaphoreCreateBinary();
+3. other operations
+	xSemaphoreTake(SimpleMutexHandler, portMAX_DELAY);
+	xSemaphoreGive(SimpleMutexHandler);
 ________________________________________
 ################## How to create counting semaphore?
 1. SemaphoreHandle_t CountingSem;
@@ -113,6 +120,13 @@ ________________________________________
 	semcount = uxSemaphoreGetCount(CountingSem);
 	xSemaphoreGiveFromISR(CountingSem, &xHigherPriorityTaskWoken);
 ________________________________________
+################## How to create mutex?
+1. SemaphoreHandle_t SimpleMutexHandler;
+2. SimpleMutexHandler = xSemaphoreCreateMutex();
+3. other operations
+	xSemaphoreTake(SimpleMutexHandler, portMAX_DELAY);
+	xSemaphoreGive(SimpleMutexHandler);
+________________________________________
 ################## How to create queue?
 1. xQueueHandle SimpleQueue;
 2. SimpleQueue = xQueueCreate(5, sizeof(int));
@@ -120,13 +134,6 @@ ________________________________________
 	xQueueSend( xQueue, pvItemToQueue, xTicksToWait )
 	xQueueSendToFrontFromISR( xQueue, pvItemToQueue, pxHigherPriorityTaskWoken )
 	xQueueReceive( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait )
-________________________________________
-################## How to create mutex?
-1. SemaphoreHandle_t SimpleMutexHandler;
-2. SimpleMutexHandler = xSemaphoreCreateMutex();
-3. other operations
-	xSemaphoreTake(SimpleMutexHandler, portMAX_DELAY);
-	xSemaphoreGive(SimpleMutexHandler);
 ________________________________________
 ################## cmsis.h Important Functions
 
@@ -215,6 +222,10 @@ ________________________________________
 ⚫ xSemaphoreCreateMutex()	
 	·Create Mutex
 	
+⚫ xSemaphoreCreateBinary()	
+	·Create Binary Semaphore
+
+
 ________________________________________
 ################## S3 Counting Semaphores
 ⚫ FreeRTOS is used in this project as RTOS Library.
@@ -247,6 +258,6 @@ vTaskDelayUntil Parameter Description: It is one of the macros allowing those co
 4. USE_COUNTING_SEMAPHORES is enabled in => RTOS_S3
 USE_COUNTING_SEMAPHORES Parameter Description: Set to 1 to include counting semaphore functionality in the build, or 0 to omit counting semaphore functionality from the build.
 
-5.
+5. Priority Inheritance : when a lower priority task inherits the priority of the highest task it's called priority inheritance => RTOS_S6
 
-
+6. Mutex vs Binary Semaphore => Mutex uses priority inheritance while binary semaphore uses priority inversion.
